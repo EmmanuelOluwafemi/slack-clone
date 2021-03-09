@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Grid } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import './App.css'
+
+import ColorPanel from './components/ColorPanel/ColorPanel';
+import SidePanel from './components/SidePanel/SidePanel';
+import Messages from './components/Messages/Messages';
+import MetaPanel from './components/MetaPanel/MetaPanel';
+
+const App = ({ currentUser, currentChannel }) => {
+    return (
+        <Grid columns="equal" className="app" style={{ background: '#eee' }}>
+            <ColorPanel />
+            <SidePanel 
+                key= {currentUser && currentUser.uid}
+                currentUser={currentUser} 
+            />
+            <Grid.Column style={{ marginLeft: 320 }}>
+                <Messages 
+                    key= {currentChannel && currentChannel.id}
+                    currentChannel={ currentChannel }
+                    currentUser={ currentUser }
+                />
+            </Grid.Column>
+            <Grid.Column width={4}>
+                <MetaPanel />
+            </Grid.Column>
+        </Grid>
+    )
 }
 
-export default App;
+const mapStateToProps = state => ({
+    currentUser: state.user.currentUser,
+    currentChannel: state.channel.currentChannel
+})
+
+export default connect(mapStateToProps)(App)
